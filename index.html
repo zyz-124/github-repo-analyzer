@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="GitHub Repo Analyzer - 分析任意 GitHub 仓库，可视化展示代码语言分布、贡献者活跃度、提交频率"
+    />
+    <meta name="theme-color" content="#3b82f6" />
+    <title>GitHub Repo Analyzer</title>
+    <!--
+      Tauri 桌面环境 CSP：桌面环境下由 tauri.conf.json 中的 csp: null 控制
+      浏览器端 CSP：限制外部资源来源，确保安全性
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="
+        default-src 'self';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data: https://avatars.githubusercontent.com https://*.githubusercontent.com blob:;
+        connect-src 'self' https://api.github.com https://api.mymemory.translated.net;
+        font-src 'self';
+        media-src 'self' blob: data:;
+      "
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
