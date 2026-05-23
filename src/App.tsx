@@ -54,7 +54,7 @@ import {
   fetchCommitActivity,
   fetchReadme,
 } from "./services/githubApi";
-import type { RepoAnalysisResult } from "./types/github";
+import type { RepoAnalysisResult, CommitActivity } from "./types/github";
 import { ThemeToggle } from "./components/ThemeToggle";
 import { SettingsDialog } from "./components/SettingsDialog";
 import { LoadingSkeleton } from "./components/LoadingSkeleton";
@@ -77,9 +77,6 @@ const CHART_COLORS = [
   "#f97316",
   "#6366f1",
 ] as const;
-
-/** localStorage 中存储的最大图片/视频大小限制 (10MB) */
-const MAX_MEDIA_SIZE = 10 * 1024 * 1024;
 
 // ========================
 // 类型定义
@@ -117,19 +114,6 @@ function formatDate(dateStr: string): string {
     return new Date(dateStr).toLocaleDateString("zh-CN");
   } catch {
     return dateStr;
-  }
-}
-
-/**
- * 安全解析 JSON，失败时返回 null
- */
-function safeJsonParse<T>(str: string | null, fallback: T): T {
-  if (!str) return fallback;
-  try {
-    return JSON.parse(str) as T;
-  } catch {
-    console.warn("[App] JSON 解析失败，使用默认值");
-    return fallback;
   }
 }
 
@@ -406,7 +390,7 @@ function AppContent() {
           fetchLanguages(owner, repo),
           fetchContributors(owner, repo),
           fetchCommitActivity(owner, repo).catch(
-            (): typeof commitActivity => {
+            (): CommitActivity[] => {
               console.warn("[App] 获取提交活动数据失败");
               return [];
             }

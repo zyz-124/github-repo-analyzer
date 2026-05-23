@@ -19,10 +19,14 @@ export default defineConfig({
     chunkSizeWarningLimit: 600,
     rollupOptions: {
       output: {
-        manualChunks: {
-          // 将大型依赖分离为独立 chunk，优化加载性能
-          'vendor-recharts': ['recharts'],
-          'vendor-react': ['react', 'react-dom'],
+        // 将大型依赖分离为独立 chunk，优化加载性能
+        manualChunks(id: string) {
+          if (id.includes('node_modules/recharts')) {
+            return 'vendor-recharts';
+          }
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'vendor-react';
+          }
         },
       },
     },
